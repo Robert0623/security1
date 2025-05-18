@@ -26,7 +26,9 @@ public class SecurityConfig {
                         .anyRequest().permitAll()) // 나머지 인증(로그인) 필요 X
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form ->
-                        form.loginPage("/loginForm"))
+                        form.loginPage("/loginForm")
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/"))
                 .build();
     }
 
