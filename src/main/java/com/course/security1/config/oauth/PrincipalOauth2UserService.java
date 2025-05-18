@@ -9,6 +9,7 @@ import com.course.security1.model.User;
 import com.course.security1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -24,6 +25,9 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
+
+    @Value("${social.login.common.secret.key}")
+    private String socialLoginCommonSecretKey;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository userRepository;
@@ -66,7 +70,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         String providerId = oAuth2UserInfo.getProviderId();
         String username = provider + "_" + providerId;
-        String encryptedPassword = bCryptPasswordEncoder.encode("겟인데어");
+        String encryptedPassword = bCryptPasswordEncoder.encode(socialLoginCommonSecretKey);
         String email = oAuth2UserInfo.getEmail();
         String role = "ROLE_USER";
 
