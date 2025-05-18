@@ -51,9 +51,12 @@ public class IndexController {
         // view resolver 설정 --> templates (prefix), .mustache (suffix) 생략 가능
         return "index";
     }
+
+    // OAuth, 일반로그인 둘 다 PrincipalDetails로 받을 수 있다.
     @ResponseBody
     @GetMapping("/user")
-    public String user() {
+    public String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        System.out.println("principalDetails = " + principalDetails);
         return "user";
     }
     @ResponseBody

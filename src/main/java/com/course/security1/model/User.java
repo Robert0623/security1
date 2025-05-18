@@ -26,12 +26,17 @@ public class User {
     private String role;
     private LocalDateTime createdDate;
 
+    private String provider;
+    private String providerId;
+
     @Builder
-    public User(String username, String password, String email, String role) {
+    public User(String username, String password, String email, String role, String provider, String providerId) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.createdDate = LocalDateTime.now();
+        this.provider = provider;
+        this.providerId = providerId;
     }
 }

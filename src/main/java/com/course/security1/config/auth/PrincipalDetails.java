@@ -9,7 +9,6 @@ package com.course.security1.config.auth;
 
 import com.course.security1.model.User;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -18,11 +17,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @Getter
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private final User user;
+    private Map<String, Object> attributes;
+
+    // 일반 로그인
+    public PrincipalDetails(User user) {
+        this.user = user;
+    }
+
+    // OAuth 로그인
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+    }
 
     // 해당 User의 권한을 리턴하는 곳
     @Override
@@ -49,6 +59,6 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public Map<String, Object> getAttributes() {
-        return null;
+        return attributes;
     }
 }
