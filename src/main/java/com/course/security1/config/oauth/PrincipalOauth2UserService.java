@@ -1,6 +1,9 @@
 package com.course.security1.config.oauth;
 
 import com.course.security1.config.auth.PrincipalDetails;
+import com.course.security1.config.auth.provider.FacebookUserInfo;
+import com.course.security1.config.auth.provider.GoogleUserInfo;
+import com.course.security1.config.auth.provider.OAuth2UserInfo;
 import com.course.security1.model.User;
 import com.course.security1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +49,21 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         log.info("getAttriutes:{}", oAuth2User.getAttributes());
 
         String provider = userRequest.getClientRegistration().getRegistrationId(); // google
-        String providerId = oAuth2User.getAttribute("sub");
+
+        OAuth2UserInfo oAuth2UserInfo = null;
+
+        if ("google".equals(provider)) {
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        } else if ("facebook".equals(provider)) {
+            oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+        } else {
+            log.error("지원하지 않는 provider:{}", provider);
+        }
+
+        String providerId = oAuth2UserInfo.getProviderId();
         String username = provider + "_" + providerId;
         String encryptedPassword = bCryptPasswordEncoder.encode("겟인데어");
-        String email = oAuth2User.getAttribute("email");
+        String email = oAuth2UserInfo.getEmail();
         String role = "ROLE_USER";
 
         Optional<User> userOptional = userRepository.findByUsername(username);
