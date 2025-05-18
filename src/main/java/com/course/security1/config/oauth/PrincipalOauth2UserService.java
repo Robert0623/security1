@@ -3,6 +3,7 @@ package com.course.security1.config.oauth;
 import com.course.security1.config.auth.PrincipalDetails;
 import com.course.security1.config.auth.provider.FacebookUserInfo;
 import com.course.security1.config.auth.provider.GoogleUserInfo;
+import com.course.security1.config.auth.provider.NaverUserInfo;
 import com.course.security1.config.auth.provider.OAuth2UserInfo;
 import com.course.security1.model.User;
 import com.course.security1.repository.UserRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -56,6 +58,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
         } else if ("facebook".equals(provider)) {
             oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+        } else if ("naver".equals(provider)) {
+            oAuth2UserInfo = new NaverUserInfo((Map) oAuth2User.getAttributes().get("response"));
         } else {
             log.error("지원하지 않는 provider:{}", provider);
         }
