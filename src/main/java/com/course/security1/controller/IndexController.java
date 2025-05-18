@@ -5,6 +5,8 @@ import com.course.security1.repository.UserRepository;
 import com.course.security1.request.UserCreate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,5 +68,21 @@ public class IndexController {
                 .build();
         userRepository.save(user); // 비밀번호 1234 --> 시큐리티로 로그인을 할 수 없음 --> 패스워드 암호화 필요
         return "redirect:/loginForm";
+    }
+
+    @ResponseBody
+    // 기본적으로 url 패턴으로 체크 하고, 그 이외에 하나씩 권한체크를 하고싶을 때
+    @Secured("ROLE_ADMIN") // 하나의 권한을 체크
+    @GetMapping("/info")
+    public String info() {
+        return "개인정보";
+    }
+
+    @ResponseBody
+    // 기본적으로 url 패턴으로 체크 하고, 그 이외에 하나씩 권한체크를 하고싶을 때
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')") // 여러 개의 권한을 체크
+    @GetMapping("/data")
+    public String data() {
+        return "데이터";
     }
 }
